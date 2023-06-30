@@ -1,0 +1,148 @@
+body{
+    background-color: #F7F9FB;
+    color: #F7F9FB;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background: rgb(6,38,84);
+    background: linear-gradient(0deg, rgba(6,38,84,1) 0%, rgba(60,133,190,1) 94%);
+}
+.city-input h1{
+    margin-top: 30px;
+    margin-bottom: 0px;
+    font-size: 40px;
+    color: #F7F9FB;
+    font-weight: bolder;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.city-input h2{
+    margin-top: 0px;
+    font-size: 30px;
+    color: #F7F9FB;
+    font-weight: lighter;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.city-input input{
+    margin-top: 0px;
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+    border-radius: 20px;
+    border: none;
+    height: 30px;
+    width: 180px;
+}
+.city-input input::placeholder{
+    color: black
+}
+.row{
+    display: flex;
+    background-color: rgba(143, 193, 227, 0.5);
+    border-radius: 100px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+.city{
+    width: 500px;
+    border-radius: 10px;
+}
+.city h1{
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+}
+
+.city h2{
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+}
+.temp-info h1{
+    margin-bottom: 0px;
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+}
+.subsection-left{
+    border-radius: 10px;
+    width: 250px;
+    flex-basis: 50%; 
+}
+.subsection-right{
+    border-radius: 10px;
+    width: 250px;
+    margin-left: 5px;
+    flex-basis: 50%;
+}
+.subsection-right h1, .subsection-left h1{
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+}
+.bottom-part{   
+    margin-top: 20px;
+    display: block;
+}
+.bottom-part h1{
+    padding: 0px 10px;
+}
+.error{
+    font-size: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+    text-align: center;
+    display: none;
+}
+input::placeholder {
+    font-weight: lighter;
+    opacity: 0.4;
+  }
+.weather-icon{
+    width: 150px;
+    height: 150px;
+}
+.city{
+    padding: 20px 10px;
+    margin: 20px 10px;
+    border-radius: 100px;
+    background-color: rgba(143, 193, 227, 0.5);
+}
+#citiesDropdown{
+    background-color: rgba(143, 193, 227, 0.5);
+    border-radius: 10px;
+    border: none;
+    user-select: none;
+}
+.row h1{
+    margin-top: 5px;
+}
+.precipitation i{
+    margin-top: 15px;
+    margin-bottom: 0px;
+    font-size: 40px;
+    color: rgb(38, 75, 126);
+}
+.feels-like img{
+    margin-top: 15px;
+    margin-bottom: 0px;
+    width: 40px;
+}
+.wind i{
+    margin-top: 15px;
+    margin-bottom: 0px;
+    font-size: 40px;
+    color: rgb(216, 216, 216);
+}
+.humidity img{
+    margin-top: 15px;
+    margin-bottom: 0px;
+    width: 40px;
+}

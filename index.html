@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, intial-scale=1.0">
+        <title>Weather</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://kit.fontawesome.com/f07b27b883.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="city-input">
+                <h1>Weather</h1>
+                <h2>Forecasts</h2>
+                <input name="city" placeholder="City" id="weatherInput" onkeydown="checkEnter(event)" onclick="clearPlaceholder()">
+                <div class="error">
+                    <p>Invalid City</p>
+                </div>
+            </div>
+            <div class="bottom-part">
+                <select id="citiesDropdown" onchange="dropdownmenu(this)" >
+                    <option class="option0" value="option1"></option>
+                    <option class="option1" value="option2"></option>
+                    <option class="option2" value="option3"></option>
+                    <option class="option3" value="option4"></option>
+                    <option class="option4" value="option5"></option>
+                  </select>
+                <div class="city">
+                    <h1 id="displayText"></h1>
+                    <img src="images/search.png" class="weather-icon">
+                    <h2 class="conditions"></h2>
+                    <h1 class="temp"></h1>
+                </div>
+            <div class="row">
+                <div class="subsection-left">
+                <div class="feels-like">
+                    <img src="images/thermometer.png">
+                    <h1 class="feelslike"></h1>
+                </div>
+                </div>
+                <div class="subsection-right">
+                <div class="wind">
+                    <i class="fa-sharp fa-solid fa-wind"></i>
+                    <h1 class="windspeed"></h1>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="subsection-left">
+                <div class="precipitation">
+                    <i class="fa-solid fa-cloud-rain"></i>
+                    <h1 class="rain"></h1>
+                </div>
+                </div>
+                <div class="subsection-right">
+                <div class="humidity">   
+                    <img src="images/humidity (1).png">
+                    <h1 class="humid"></h1>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    <script>
+        const apiKey = "f17721d1daf728744c2cc563e62de555";
+        const apiUrl = "http://api.openweathermap.org/geo/1.0/direct?limit=5&units=imperial&";
+        const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=imperial&";
+        const searchBox = document.querySelector(".city-input input");
+        const weatherIcon = document.querySelector(".weather-icon");
+
+        async function checkWeather({city, lat, lon, index = 0}){
+            var response2;
+            if (!lat && !lon){
+                response2 = await fetch(weatherApiUrl + `&q=${city}` + `&appid=${apiKey}`); // this gets the actual weather data
+            }else{
+                response2 = await fetch(weatherApiUrl + `&lat=${lat}` + `&lon=${lon}` + `&appid=${apiKey}`); 
+            }
+            const response = await fetch(apiUrl + `&q=${city}` + `&appid=${apiKey}`); // this is to get the list of possible cities that have the same name as the input
+            if (response2.status == 404){ // if the city is not a valid city 
+                    document.querySelector(".error").style.display = "block";
+                    document.querySelector(".bottom-part").style.display = "none";
+                    // display the error message and hide the weather info 
+            }else{
+                var geoData = await response.json(); // the data of the possible cities
+                var data = await response2.json(); // the weather data of the city
+                console.log(geoData);
+                console.log(data);
+                for (var i = 0; i < 5; i++){
+                    document.querySelector(".option" + i).innerHTML = geoData[i].state ? geoData[i].name + ", " + geoData[i].state + ", " + geoData[i].country : geoData[i].name + ", " + geoData[i].country;
+                    document.querySelector(".option" + i).value = geoData[i].lat + "," + geoData[i].lon + "," + geoData[i].name + "," + i;
+                } // this will display 5 possible cities with the same name as the input
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°F";
+                document.querySelector(".feelslike").innerHTML = "Feels Like <br>" + Math.round(data.main.feels_like) + "°F";
+                document.querySelector(".windspeed").innerHTML = "Wind Speed <br>" + data.wind.speed + "mph";
+                document.querySelector(".humid").innerHTML = "Humidity <br>" + data.main.humidity + "%";
+                document.querySelector('.conditions').innerHTML = data.weather[0].main;
+                if (data.rain){
+                    document.querySelector(".rain").innerHTML = "Precipitation <br>" + data.rain;
+                }else{
+                    document.querySelector(".rain").innerHTML = "Precipitation <br> No rain";
+                }
+                if (data.weather[0].main == "Clouds"){
+                    weatherIcon.src = "images/clouds.png"
+                }
+                else if (data.weather[0].main == "Clear"){
+                    weatherIcon.src = "images/clear.png"
+                }
+                else if (data.weather[0].main == "Rain"){
+                    weatherIcon.src = "images/rain.png"
+                }
+                else if (data.weather[0].main == "Drizzle"){
+                    weatherIcon.src = "images/drizzle.png"
+                }
+                else if (data.weather[0].main == "Mist"){
+                    weatherIcon.src = "images/mist.png"
+                }
+                displayInput({city: data.name, state: geoData[index].state, country: data.sys.country});
+                document.querySelector(".bottom-part").style.display = "block";
+                document.querySelector(".error").style.display = "none";
+            }
+        }
+        function dropdownmenu(selected){
+            var selectedValue = selected.value;
+            selectedValue = selectedValue.split(",");
+            checkWeather({city: selectedValue[2], lat: selectedValue[0], lon: selectedValue[1], index: selectedValue[3] });
+        }
+        function clearPlaceholder() {
+            var input = document.getElementById("weatherInput");
+            input.placeholder = "";
+        }
+        function checkEnter(event) {
+            if (event.keyCode === 13) { // 13 represents the Enter key
+                checkWeather({city: searchBox.value});
+                displayInput({city: null, country: null});
+                searchBox.value = ""
+            }
+        }
+        function displayInput({city, state, country}) {
+            if (city && state && country){
+                input = city + ", " + state + ", " + country;
+            }else{
+                var input = document.getElementById("weatherInput").value; //gets the what the user input
+                const words = input.split(" "); // split the input into different words
+                const capitalizedWords = words.map(word => { // capitalizes the first letter of each word 
+                    if (word.length > 0) {
+                    const firstLetter = word[0].toUpperCase();
+                    const restOfWord = word.slice(1);
+                    return firstLetter + restOfWord;
+                    }
+                    return word;
+                });
+                const capitalizedInput = capitalizedWords.join(" "); // makes the returned list into a string
+                input = capitalizedInput;
+            }
+            var displayElement = document.getElementById("displayText");
+            var currentTime = new Date();
+            var hours = currentTime.getHours();
+            var minutes = currentTime.getMinutes();
+            var meridiem = hours >= 12 ? "PM" : "AM";
+            minutes = minutes < 10 ? "0" + minutes : minutes
+            hours = hours % 12 || 12; //assigns the remainder as the hour var or if the remainder is 0 will assign 12 to the hour var
+            var displayText = input + " " + hours + ":" + minutes + " " + meridiem;
+            displayElement.innerHTML = displayText;
+        }
+        
+    </script>
+    </body>
+</html>

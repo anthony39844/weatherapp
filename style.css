@@ -3,8 +3,6 @@ body{
     color: #F7F9FB;
 }
 .container{
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -12,6 +10,7 @@ body{
     transform: translateX(-50%);
     border-radius: 20px;
     background: rgb(6,38,84);
+    overflow: scroll;
     background: linear-gradient(0deg, rgba(6,38,84,1) 0%, rgba(60,133,190,1) 94%);
 }
 .city-input h1{
@@ -46,13 +45,19 @@ body{
 .row{
     display: flex;
     background-color: rgba(143, 193, 227, 0.5);
-    border-radius: 100px;
-    margin-top: 50px;
-    margin-bottom: 20px;
+    border-radius: 50px;
+    margin: 20px 20px 20px;
+    overflow: scroll;
 }
 .city{
-    width: 500px;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 100px;
+    height: fit-content;
+    padding: 20px 10px;
+    margin: 20px 20px;
+    background-color: rgba(143, 193, 227, 0.5);
+    overflow: scroll;
 }
 .city h1{
     font-size: 40px;
@@ -79,7 +84,6 @@ body{
 .subsection-right{
     border-radius: 10px;
     width: 250px;
-    margin-left: 5px;
     flex-basis: 50%;
 }
 .subsection-right h1, .subsection-left h1{
@@ -108,12 +112,8 @@ input::placeholder {
 .weather-icon{
     width: 150px;
     height: 150px;
-}
-.city{
-    padding: 20px 10px;
-    margin: 20px 10px;
-    border-radius: 100px;
-    background-color: rgba(143, 193, 227, 0.5);
+    margin-left: auto;
+    margin-right: auto;
 }
 #citiesDropdown{
     background-color: rgba(143, 193, 227, 0.5);
@@ -146,3 +146,28 @@ input::placeholder {
     margin-bottom: 0px;
     width: 40px;
 }
+.future-forecast {
+    display: flex;
+    height: 250px;
+    align-items: center;
+    justify-content: center;
+}
+
+.future-forecast span {
+    padding: 10px;
+    width: 180px;
+    height: fit-content;
+    border-radius: 20px;
+    background-color: rgba(112, 175, 218, 0.5);
+    margin: 10px 20px 10px 20px;
+    flex: 0 0 auto;
+}
+.future-forecast h1{
+    font-size: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: lighter;
+}
+.future-forecast img{
+    width: 70px;
+}
+

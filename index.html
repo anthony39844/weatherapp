@@ -49,8 +49,8 @@
             <div class="row">
                 <div class="subsection-left">
                 <div class="precipitation">
-                    <i class="fa-solid fa-cloud-rain"></i>
-                    <h1 class="rain"></h1>
+                    <i class="fa-solid fa-cloud"></i>
+                    <h1 class="clouds"></h1>
                 </div>
                 </div>
                 <div class="subsection-right">
@@ -61,20 +61,46 @@
                 </div>
             </div>
             </div>
+            <h1 class="heading">48 Hr Forecast</h1>
+            <div class="row">
+                <div class="future-forecast">
+                    <span><h1 class="future0"></h1><img class="img0" src="images/search.png"></span>
+                    <span><h1 class="future1"></h1><img class="img1" src="images/search.png"></span>
+                    <span><h1 class="future2"></h1><img class="img2" src="images/search.png"></span>
+                    <span><h1 class="future3"></h1><img class="img3" src="images/search.png"></span>
+                    <span><h1 class="future4"></h1><img class="img4" src="images/search.png"></span>
+                    <span><h1 class="future5"></h1><img class="img5" src="images/search.png"></span>
+                    <span><h1 class="future6"></h1><img class="img6" src="images/search.png"></span>
+                    <span><h1 class="future7"></h1><img class="img7" src="images/search.png"></span>
+                    <span><h1 class="future8"></h1><img class="img8" src="images/search.png"></span>
+                    <span><h1 class="future9"></h1><img class="img9" src="images/search.png"></span>
+                    <span><h1 class="future10"></h1><img class="img10" src="images/search.png"></span>
+                    <span><h1 class="future11"></h1><img class="img11" src="images/search.png"></span>
+                    <span><h1 class="future12"></h1><img class="img12" src="images/search.png"></span>
+                    <span><h1 class="future13"></h1><img class="img13" src="images/search.png"></span>
+                    <span><h1 class="future14"></h1><img class="img14" src="images/search.png"></span>
+                    <span><h1 class="future15"></h1><img class="img15" src="images/search.png"></span>
+                </div>
+            </div>
         </div>
     <script>
         const apiKey = "f17721d1daf728744c2cc563e62de555";
         const apiUrl = "http://api.openweathermap.org/geo/1.0/direct?limit=5&units=imperial&";
         const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=imperial&";
+        const futureApiUrl = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&cnt=16";
         const searchBox = document.querySelector(".city-input input");
         const weatherIcon = document.querySelector(".weather-icon");
 
         async function checkWeather({city, lat, lon, index = 0}){
-            var response2;
+
+            var response2; // gets the weathe data on the city
+            var response3; // gets the future weather of the city
             if (!lat && !lon){
-                response2 = await fetch(weatherApiUrl + `&q=${city}` + `&appid=${apiKey}`); // this gets the actual weather data
+                response2 = await fetch(weatherApiUrl + `&q=${city}` + `&appid=${apiKey}`); 
+                response3 = await fetch(futureApiUrl + `&q=${city}` + `&appid=${apiKey}`);
             }else{
                 response2 = await fetch(weatherApiUrl + `&lat=${lat}` + `&lon=${lon}` + `&appid=${apiKey}`); 
+                response3 = await fetch(futureApiUrl + `&lat=${lat}` + `&lon=${lon}` + `&appid=${apiKey}`);
             }
             const response = await fetch(apiUrl + `&q=${city}` + `&appid=${apiKey}`); // this is to get the list of possible cities that have the same name as the input
             if (response2.status == 404){ // if the city is not a valid city 
@@ -84,37 +110,89 @@
             }else{
                 var geoData = await response.json(); // the data of the possible cities
                 var data = await response2.json(); // the weather data of the city
+                var futureData = await response3.json(); // future weather data
                 console.log(geoData);
                 console.log(data);
+                console.log(futureData);
                 for (var i = 0; i < 5; i++){
                     document.querySelector(".option" + i).innerHTML = geoData[i].state ? geoData[i].name + ", " + geoData[i].state + ", " + geoData[i].country : geoData[i].name + ", " + geoData[i].country;
                     document.querySelector(".option" + i).value = geoData[i].lat + "," + geoData[i].lon + "," + geoData[i].name + "," + i;
                 } // this will display 5 possible cities with the same name as the input
                 document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°F";
                 document.querySelector(".feelslike").innerHTML = "Feels Like <br>" + Math.round(data.main.feels_like) + "°F";
-                document.querySelector(".windspeed").innerHTML = "Wind Speed <br>" + data.wind.speed + "mph";
                 document.querySelector(".humid").innerHTML = "Humidity <br>" + data.main.humidity + "%";
-                document.querySelector('.conditions').innerHTML = data.weather[0].main;
-                if (data.rain){
-                    document.querySelector(".rain").innerHTML = "Precipitation <br>" + data.rain;
-                }else{
-                    document.querySelector(".rain").innerHTML = "Precipitation <br> No rain";
+                document.querySelector('.conditions').innerHTML = data.weather[0].main + "<br>" + "(" + data.weather[0].description + ")";
+                document.querySelector('.clouds').innerHTML = data.clouds.all + "% <br>Cloudy";
+                
+                // this will add the direction the wind is blowing
+                var windDirections = [
+                    { min: 326, max: 34, label: "N" },
+                    { min: 34, max: 78, label: "NE" },
+                    { min: 78, max: 123, label: "E" },
+                    { min: 123, max: 168, label: "SE" },
+                    { min: 168, max: 213, label: "S" },
+                    { min: 213, max: 258, label: "SW" },
+                    { min: 258, max: 303, label: "W" },
+                    { min: 303, max: 326, label: "NW" }
+                ];
+                var windSpeedText = "Wind Speed <br>" + data.wind.speed + "mph";
+                for (var i = 0; i < windDirections.length; i++) {
+                    var direction = windDirections[i];
+                    if (data.wind.deg >= direction.min && data.wind.deg < direction.max) {
+                        document.querySelector(".windspeed").innerHTML = windSpeedText + " " + direction.label;
+                        break;
+                    }
                 }
-                if (data.weather[0].main == "Clouds"){
-                    weatherIcon.src = "images/clouds.png"
+
+                for (var i = 0; i < 16; i++){
+                    var futureicon = document.querySelector(".img" + i)
+                    if (futureData.list[i].weather[0].main == "Clouds"){
+                        futureicon.src = "images/clouds.png"
+                    }
+                    else if (futureData.list[i].weather[0].main == "Clear"){
+                        futureicon.src = "images/clear.png"
+                    }
+                    else if (futureData.list[i].weather[0].main == "Rain"){
+                        futureicon.src = "images/rain.png"
+                    }
+                    else if (futureData.list[i].weather[0].main == "Drizzle"){
+                        futureicon.src = "images/drizzle.png"
+                    }
+                    else if (futureData.list[i].weather[0].main == "Mist"){
+                        futureicon.src = "images/mist.png"
+                    }else if (futureData.list[i].weather[0].main == "Snow"){
+                        futureicon.src = "images/snow.png"
+                    }
+                    
+                    if (futureData.list[i].dt_txt){
+                        var j = futureData.list[i].dt_txt.split(":"); // just the time from data and time object
+                        var k = j[0].split(" ");
+                        if (k[1] == 0){
+                            document.querySelector(".future" + i).innerHTML = k[0] + "<br>" + "12:00 AM <br>" + Math.round(futureData.list[i].main.temp) + "°F";
+                        }else if(k[1] < 12 && k[1] != 0){
+                            document.querySelector(".future" + i).innerHTML = k[0] + "<br>" + k[1] + ":00 AM <br>" + Math.round(futureData.list[i].main.temp) + "°F";
+                        }else if (k[1] >= 12 && k[1] - 12 == 0){
+                            document.querySelector(".future" + i).innerHTML = k[0] + "<br>" + (k[1]) + ":00 PM <br>" + Math.round(futureData.list[i].main.temp) + "°F";
+                        }else if(k[1] >= 12){
+                            document.querySelector(".future" + i).innerHTML = k[0] + "<br>" + (k[1] - 12) + ":00 PM <br>" + Math.round(futureData.list[i].main.temp) + "°F";
+                        }
+                    } 
+                }// this is for the future forecast
+
+                const weatherIcons = {
+                    Clouds: "images/clouds.png",
+                    Clear: "images/clear.png",
+                    Rain: "images/rain.png",
+                    Drizzle: "images/drizzle.png",
+                    Mist: "images/mist.png",
+                    Snow: "images/snow.png",
+                };
+
+                const weatherMain = data.weather[0].main;
+                if (weatherMain in weatherIcons) {
+                    weatherIcon.src = weatherIcons[weatherMain];
                 }
-                else if (data.weather[0].main == "Clear"){
-                    weatherIcon.src = "images/clear.png"
-                }
-                else if (data.weather[0].main == "Rain"){
-                    weatherIcon.src = "images/rain.png"
-                }
-                else if (data.weather[0].main == "Drizzle"){
-                    weatherIcon.src = "images/drizzle.png"
-                }
-                else if (data.weather[0].main == "Mist"){
-                    weatherIcon.src = "images/mist.png"
-                }
+
                 displayInput({city: data.name, state: geoData[index].state, country: data.sys.country});
                 document.querySelector(".bottom-part").style.display = "block";
                 document.querySelector(".error").style.display = "none";

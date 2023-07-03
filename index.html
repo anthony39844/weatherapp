@@ -84,7 +84,7 @@
         </div>
         </div>
     <script>
-        const apiKey = "f17721d1daf728744c2cc563e62de555";
+        const apiKey = process.env.API_KEY;
         const apiUrl = "http://api.openweathermap.org/geo/1.0/direct?limit=5&units=imperial&";
         const weatherApiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=imperial&";
         const futureApiUrl = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&cnt=16";
@@ -191,6 +191,8 @@
                 const weatherMain = data.weather[0].main;
                 if (weatherMain in weatherIcons) {
                     weatherIcon.src = weatherIcons[weatherMain];
+                }else{
+                    weatherIcon.src = "images/clouds.png";
                 }
 
                 displayInput({city: data.name, state: geoData[index].state, country: data.sys.country});
